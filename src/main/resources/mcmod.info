@@ -1,0 +1,16 @@
+[
+{
+  "modid": "pmcviewer",
+  "name": "PMCViewer",
+  "description": "A mod view picture via swing",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["H2Sxxa"],
+  "credits": "Setu more and more",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
