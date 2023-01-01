@@ -15,5 +15,14 @@ public class ModConfig {
     @Config.Name("get setu quality")
     public static String setuquality = "small";
 
+    @Config.Comment("[optional] tempfile")
+    @Config.LangKey("conf." + Main.MODID + ".setu.temp")
+    @Config.Name("save path")
+    public static String setutemp = "%TEMP%/setucache.jpg";
+
+    @Config.Comment("[optional] custom html")
+    @Config.LangKey("conf." + Main.MODID + ".viewer.html")
+    @Config.Name("viewer html")
+    public static String viewerhtml = "<html><img src='%s' alt='load image error' /><html>";
 
 }

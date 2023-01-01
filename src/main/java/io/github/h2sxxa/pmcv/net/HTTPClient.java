@@ -5,10 +5,11 @@ import io.github.h2sxxa.pmcv.config.ModConfig;
 import io.github.h2sxxa.pmcv.models.Setu;
 import io.github.h2sxxa.pmcv.swing.SimpleImgViewer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.io.*;
 import java.net.URL;
+
+import java.net.HttpURLConnection;
+
 
 public class HTTPClient {
     public static void handleapi(){
@@ -21,14 +22,16 @@ public class HTTPClient {
             Main.logger.info(text);
             Setu setu =new Setu(text);
             Main.logger.info(String.format("setu uid is %s",setu.setuid));
-            SimpleImgViewer imgViewer = new SimpleImgViewer();
             String url = setu.getUrl(ModConfig.setuquality);
             if (url.equals("")){
                 Main.logger.error("error config quality");
                 return;
             }
             Main.logger.info(String.format("get pic success: %s",url));
-            imgViewer.DisplayImageHtml(url);
+            handledl(url,ModConfig.setutemp);
+            SimpleImgViewer viewer = new SimpleImgViewer();
+            viewer.DisplayLocalImg(ModConfig.setutemp);
+
         }catch(Exception e){
             Main.logger.error(e);
         }
@@ -37,7 +40,6 @@ public class HTTPClient {
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
-        //int responseCode = con.getResponseCode();
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
@@ -47,5 +49,34 @@ public class HTTPClient {
         }
         in.close();
         return response.toString();
+    }
+    public static void handledl(String url,String savepath) throws Exception {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        InputStream inputStream = con.getInputStream();
+        byte[] getData = readInputStream(inputStream);
+        File file = new File(savepath);
+        if (!file.exists()){
+            file.createNewFile();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if(fos!=null){
+            fos.close();
+        }
+        if(inputStream!=null){
+            inputStream.close();
+        }
+    }
+    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
     }
 }
